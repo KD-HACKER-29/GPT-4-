@@ -1,0 +1,4 @@
+flask
+requests
+g4f-client  # Replace with the actual package name for `g4f.client` if it exists on PyPI
+gunicorn    # Optional: Useful for deployment in production environments

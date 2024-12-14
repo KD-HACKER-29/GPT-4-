@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT-4 and Image Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #response {
+            margin-top: 20px;
+        }
+        #generated_image {
+            margin-top: 20px;
+        }
+        img {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>GPT-4 and Image Generator</h1>
+    
+    <!-- Text Response Section -->
+    <h2>Ask GPT-4</h2>
+    <form id="text_form">
+        <textarea id="user_input" placeholder="Ask something..."></textarea>
+        <button type="submit">Get Response</button>
+    </form>
+
+    <div id="response"></div>
+
+    <!-- Image Generation Section -->
+    <h2>Generate Image</h2>
+    <form id="image_form">
+        <input type="text" id="image_prompt" placeholder="Describe an image...">
+        <button type="submit">Generate Image</button>
+    </form>
+
+    <div id="generated_image"></div>
+</div>
+
+<script>
+    document.getElementById('text_form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        let user_input = document.getElementById('user_input').value;
+        
+        fetch('/generate_text', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'user_input=' + encodeURIComponent(user_input)
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('response').innerHTML = "<p><strong>GPT-4 Response:</strong><br>" + data.text_response + "</p>";
+        });
+    });
+
+    document.getElementById('image_form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        let image_prompt = document.getElementById('image_prompt').value;
+
+        fetch('/generate_image', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'image_prompt=' + encodeURIComponent(image_prompt)
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('generated_image').innerHTML = "<h3>Generated Image:</h3><img src='" + data.image_url + "' />";
+        });
+    });
+</script>
+
+</body>
+</html>
